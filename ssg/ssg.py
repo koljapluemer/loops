@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 ROOT = Path(__file__).parent.parent
 DATA_DIR = ROOT / "data"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
-SITE_DIR = ROOT / "site"
+SITE_DIR = ROOT / "_site"
 
 
 def main():

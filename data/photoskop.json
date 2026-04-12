@@ -1,4 +1,9 @@
 {
     "name": "Photoskop",
-    "url": "https://photoskop.com"
+    "url": "https://photoskop.com",
+    "coreActivities": 
+    [
+        "manipulate camera settings and see simulated effects on photos",
+        "read explanations"
+    ]
 }

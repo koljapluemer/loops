@@ -1,5 +1,8 @@
 {
     "name": "Flexbox Froggy",
     "url": "https://flexboxfroggy.com/",
-    "topics": ["web development", "programming", "web design"]
+    "topics": ["web development", "programming", "web design"],
+    "coreActivities": [
+        "write flexbox CSS to move the froggies to where they want to go"
+    ]
 }
