@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,34 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
 </head>
+
 <body>
   <main>
     {% block content %}{% endblock %}
   </main>
+  <footer class="card">
+    <p>
+      Made by
+      <a href="https://koljasam.com/" target="_blank">Kolja Sam</a>. <a
+        href="https://github.com/koljapluemer/the-platform">Open Source</a>. I track page views with the
+      privacy-friendly <a href="https://www.goatcounter.com/" class="underline" target="_blank">goatcounter</a>, and
+      nothing else.
+    </p>
+
+    <p>
+      If you want to enable me to build more tool like this in the future, you can <a
+        href="https://ko-fi.com/S6S81CWUVD" target="_blank" rel="noopener">
+        support me on ko-fi
+      </a>.
+    </p>
+    </div>
+  </footer>
 </body>
+<script>
+  window.goatcounter = {
+    path: function (p) { return location.host + p }
+  }
+</script>
+<script data-goatcounter="https://koljasam.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
 </html>
