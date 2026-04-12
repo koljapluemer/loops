@@ -9,19 +9,24 @@
 <div class="card-grid">
   {% for item in items %}
   <article class="card">
-    <header>
-      <h3>{{ item.name }}</h3>
-    </header>
-    {% if item.declarativeSkills %}
-    <ul>
-      {% for skill in item.declarativeSkills %}
-      <li>{{ skill }}</li>
-      {% endfor %}
-    </ul>
+    {% if item.img %}
+    <img src="{{ item.img }}" alt="{{ item.name }} screenshot">
     {% endif %}
-    <footer>
-      <a href="{{ item.url }}" target="_blank" rel="noopener">visit &rarr;</a>
-    </footer>
+    <div class="card-body">
+      <header>
+        <h3>{{ item.name }}</h3>
+      </header>
+      {% if item.declarativeSkills %}
+      <ul>
+        {% for skill in item.declarativeSkills %}
+        <li>{{ skill }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <footer>
+        <a href="{{ item.url }}" target="_blank" rel="noopener">visit &rarr;</a>
+      </footer>
+    </div>
   </article>
   {% endfor %}
 </div>

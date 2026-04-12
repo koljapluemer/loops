@@ -15,10 +15,19 @@ def main():
     shutil.rmtree(SITE_DIR, ignore_errors=True)
     SITE_DIR.mkdir()
 
+    img_src_dir = DATA_DIR / "img"
+    img_out_dir = SITE_DIR / "img"
+
     items = []
     for path in sorted(DATA_DIR.glob("*.json")):
         with path.open() as f:
-            items.append(json.load(f))
+            item = json.load(f)
+        img_path = img_src_dir / f"{path.stem}.webp"
+        if img_path.exists():
+            img_out_dir.mkdir(exist_ok=True)
+            shutil.copy(img_path, img_out_dir / img_path.name)
+            item["img"] = f"img/{img_path.name}"
+        items.append(item)
 
     env = Environment(loader=FileSystemLoader(TEMPLATES_DIR), autoescape=True)
 

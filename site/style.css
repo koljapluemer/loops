@@ -11,12 +11,18 @@ main {
   margin-top: 2rem;
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
+.card-grid .card {
+  overflow: hidden;
+  padding: 0;
 }
 
-.card footer {
-  margin-top: auto;
-  padding-top: 1rem;
+.card-grid .card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.card-grid .card .card-body {
+  padding: var(--space-6);
 }
