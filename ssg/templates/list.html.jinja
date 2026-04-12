@@ -1,0 +1,28 @@
+{% extends "base.html.jinja" %}
+
+{% block title %}the platform{% endblock %}
+
+{% block content %}
+<header>
+  <h1>the platform</h1>
+</header>
+<div class="card-grid">
+  {% for item in items %}
+  <article class="card">
+    <header>
+      <h3>{{ item.name }}</h3>
+    </header>
+    {% if item.declarativeSkills %}
+    <ul>
+      {% for skill in item.declarativeSkills %}
+      <li>{{ skill }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <footer>
+      <a href="{{ item.url }}" target="_blank" rel="noopener">visit &rarr;</a>
+    </footer>
+  </article>
+  {% endfor %}
+</div>
+{% endblock %}
