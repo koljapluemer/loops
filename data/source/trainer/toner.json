@@ -1,4 +1,4 @@
 {
-    "name": "toner",
-    "url": "https://toner-lake.vercel.app/"
+    "name": [["toner"]],
+    "urls": [["https://toner-lake.vercel.app/", "link"]]
 }

@@ -1,5 +1,5 @@
 {
-    "name": "Lisaan Masry: Dictionary",
+    "name": [["Lisaan Masry: Word of the Day"]],
     "urls": [["https://eu.lisaanmasry.org/online/wotd.php", "link"]],
     "rels": {
         "source:meta:lisaanmasry": [["parent"]]

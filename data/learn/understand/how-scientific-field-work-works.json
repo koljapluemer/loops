@@ -1,6 +1,9 @@
 {
-    "name": ["how scientific field experiments work", {"alternatives": [{"how scientific field work works": {}}]}],
+    "name": [
+        ["how scientific field experiments work"],
+        ["how scientific field work works"]
+    ],
     "rels": {
-        "source:trainer:wake": ["get a feel for the life as a field scientist"]
+        "source:trainer:wake": [["get a feel for the life as a field scientist"]]
     }
 }

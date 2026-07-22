@@ -1,4 +1,4 @@
 {
-    "name": ["travle"],
-    "urls": [["https://travle.earth/"]]
+    "name": [["travle"]],
+    "urls": [["https://travle.earth/", "link"]]
 }

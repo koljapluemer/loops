@@ -1,6 +1,6 @@
 {
-    "name": "to sing",
+    "name": [["to sing"]],
     "rels": {
-        "source:trainer:toner": ["practice singing"]
+        "source:trainer:toner": [["practice singing"]]
     }
 }

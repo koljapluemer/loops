@@ -1,0 +1,59 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://the-platform.local/schema/data-entry.schema.json",
+    "title": "Data entry",
+    "description": "Common schema for every JSON file under data/. Text-bearing fields (name, description, topics, rels labels, urls) are wrapped in a double array: the outer array lists alternative candidates, the inner array is a tuple whose first slot is the value itself. This leaves the second slot free for a Bayesian rating object to be appended later without re-nesting anything.",
+    "type": "object",
+    "properties": {
+        "name": { "$ref": "#/$defs/ratableTextList" },
+        "description": { "$ref": "#/$defs/ratableTextList" },
+        "topics": { "$ref": "#/$defs/ratableTextList" },
+        "urls": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ratableUrlEntry" }
+        },
+        "rels": {
+            "type": "object",
+            "minProperties": 1,
+            "patternProperties": {
+                "^[a-z0-9]+(-[a-z0-9]+)*(:[a-z0-9]+(-[a-z0-9]+)*){1,2}$": { "$ref": "#/$defs/ratableTextList" }
+            },
+            "additionalProperties": false
+        },
+        "img": {
+            "type": "string",
+            "contentEncoding": "base64",
+            "minLength": 1
+        }
+    },
+    "required": ["name"],
+    "additionalProperties": false,
+    "$defs": {
+        "ratableTextEntry": {
+            "description": "[value] today; [value, ratingObj] once Bayesian ratings are wired in.",
+            "type": "array",
+            "prefixItems": [
+                { "type": "string", "minLength": 1 }
+            ],
+            "items": { "type": "object" },
+            "minItems": 1,
+            "maxItems": 2
+        },
+        "ratableTextList": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ratableTextEntry" },
+            "minItems": 1
+        },
+        "ratableUrlEntry": {
+            "description": "[url, label] today; [url, label, ratingObj] once Bayesian ratings are wired in.",
+            "type": "array",
+            "prefixItems": [
+                { "type": "string", "format": "uri", "minLength": 1 },
+                { "type": "string", "minLength": 1 }
+            ],
+            "items": { "type": "object" },
+            "minItems": 2,
+            "maxItems": 3
+        }
+    }
+}
