@@ -1,0 +1,7 @@
+{
+    "name": "Lisaan Masry: Dictionary",
+    "urls": [["https://eu.lisaanmasry.org/online/wotd.php", "link"]],
+    "rels": {
+        "source:meta:lisaanmasry": [["parent"]]
+    }
+}
