@@ -1,0 +1,63 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} · The Platform</title>
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+    <style is:global>
+      body {
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        color: #1a1a1a;
+      }
+      h1 {
+        text-transform: capitalize;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin-top: 2rem;
+      }
+      ul {
+        padding-left: 1.2rem;
+      }
+      .muted {
+        color: #666;
+        font-size: 0.9rem;
+      }
+      .tags {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .tags li {
+        background: #eee;
+        border-radius: 1rem;
+        padding: 0.1rem 0.7rem;
+        font-size: 0.85rem;
+      }
+      .entry-img {
+        max-width: 100%;
+        border-radius: 0.3rem;
+      }
+      a {
+        color: #0055aa;
+      }
+    </style>
+  </body>
+</html>

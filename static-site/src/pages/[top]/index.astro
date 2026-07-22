@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getTopLevels, getEntriesByTop, type Entry } from "../../lib/data";
+
+export function getStaticPaths() {
+  return getTopLevels().map((top) => ({ params: { top } }));
+}
+
+const { top } = Astro.params;
+const entries = getEntriesByTop(top);
+
+const grouped = new Map<string, Entry[]>();
+for (const entry of entries) {
+  const key = entry.sub ?? "";
+  const list = grouped.get(key) ?? [];
+  list.push(entry);
+  grouped.set(key, list);
+}
+const groupKeys = [...grouped.keys()].sort((a, b) => {
+  if (a === "") return -1;
+  if (b === "") return 1;
+  return a.localeCompare(b);
+});
+---
+
+<Base title={top}>
+  <p><a href="/">&larr; all categories</a></p>
+  <h1>{top}</h1>
+  {entries.length === 0 && <p class="muted">No entries yet.</p>}
+  {
+    groupKeys.map((key) => (
+      <section>
+        {key && <h2>{key}</h2>}
+        <ul>
+          {(grouped.get(key) ?? []).map((entry) => (
+            <li>
+              <a href={`/${entry.segments.join("/")}/`}>{entry.name}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>

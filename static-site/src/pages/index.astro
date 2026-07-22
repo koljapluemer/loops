@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+import { getTopLevels, getEntriesByTop } from "../lib/data";
+
+const tops = getTopLevels();
+const counts = new Map(tops.map((top) => [top, getEntriesByTop(top).length]));
+---
+
+<Base title="The Platform">
+  <h1>The Platform</h1>
+  <ul>
+    {
+      tops.map((top) => (
+        <li>
+          <a href={`/${top}/`}>{top}</a>{" "}
+          <span class="muted">({counts.get(top)})</span>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

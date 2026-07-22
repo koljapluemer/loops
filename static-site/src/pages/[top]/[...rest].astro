@@ -1,0 +1,114 @@
+---
+import Base from "../../layouts/Base.astro";
+import {
+  getAllEntries,
+  getEntry,
+  getBacklinks,
+  idToHref,
+  imgSrc,
+  relLabel,
+  textList,
+} from "../../lib/data";
+
+export function getStaticPaths() {
+  return getAllEntries().map((entry) => ({
+    params: {
+      top: entry.top,
+      rest: entry.segments.slice(1).join("/"),
+    },
+    props: { id: entry.id },
+  }));
+}
+
+const { id } = Astro.props;
+const entry = getEntry(id)!;
+const backlinks = getBacklinks(id);
+const description = textList(entry.raw.description).join(" / ");
+const topics = textList(entry.raw.topics);
+const rels = Object.entries(entry.raw.rels ?? {}).map(
+  ([targetId, labelList]) => ({
+    targetId,
+    label: relLabel(labelList),
+    target: getEntry(targetId),
+  }),
+);
+---
+
+<Base title={entry.name}>
+  <p><a href={`/${entry.top}/`}>&larr; {entry.top}</a></p>
+  <h1>{entry.name}</h1>
+  {
+    entry.altNames.length > 0 && (
+      <p class="muted">also known as: {entry.altNames.join(", ")}</p>
+    )
+  }
+
+  {
+    entry.raw.img && (
+      <img class="entry-img" src={imgSrc(entry.raw.img)} alt={entry.name} />
+    )
+  }
+
+  {description && <p>{description}</p>}
+
+  {
+    topics.length > 0 && (
+      <ul class="tags">
+        {topics.map((t) => <li>{t}</li>)}
+      </ul>
+    )
+  }
+
+  {
+    entry.raw.urls && entry.raw.urls.length > 0 && (
+      <section>
+        <h2>Links</h2>
+        <ul>
+          {entry.raw.urls.map((u) => (
+            <li>
+              <a href={u[0]} target="_blank" rel="noopener noreferrer">
+                {u[1]}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    rels.length > 0 && (
+      <section>
+        <h2>Relations</h2>
+        <ul>
+          {rels.map((r) => (
+            <li>
+              {r.target ? (
+                <a href={idToHref(r.targetId)}>{r.target.name}</a>
+              ) : (
+                <span class="muted">{r.targetId}</span>
+              )}
+              {r.label && <> — {r.label}</>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    backlinks.length > 0 && (
+      <section>
+        <h2>Backlinks</h2>
+        <ul>
+          {backlinks.map((b) => (
+            <li>
+              <a href={idToHref(b.from.id)}>{b.from.name}</a>
+              {b.label && <> — {b.label}</>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
