@@ -1,0 +1,6 @@
+{
+    "name": "to sing",
+    "rels": {
+        "source:trainer:toner": ["practice singing"]
+    }
+}

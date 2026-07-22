@@ -1,9 +1,5 @@
 {
     "name": "Photoskop",
-    "url": "https://photoskop.com",
-    "coreActivities": 
-    [
-        "manipulate camera settings and see simulated effects on photos",
-        "read explanations"
-    ]
+    "urls": ["https://photoskop.com"],
+    "img": "R0lGODlhIAAgAPIAAAAAAAsLDSMjIx4eIlJUW72ysQAAAAAAACH5BAEAAAAALAAAAAAgACAAAAOkCLrc/jDKSau9OOuthBiFJ45kaZaDQBBqSBTr2xZw6rHooO87wf82UypALAZ0JJ0xIKDRRqHjEqnCDZaCgLM5khptq0JKWWxucazlMcV6eq5lEo6prtuzI3TWToTXTyB7dVd+aidcfIlEh1GJhViHgmouTX8naXYwLAMEhpeSRj4xPp4ojYYBPmOlJaeKlpFyKjextSIhtrm6hxy9vr/AwcLDDAkAOw=="
 }

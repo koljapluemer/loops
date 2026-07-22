@@ -1,6 +1,4 @@
 {
-    "name": "travle",
-    "url": "https://travle.earth/",
-    "declarativeKnowledge": ["where countries are", "where countries are in relation to each other"],
-    "proceduralSkills": []
+    "name": ["travle"],
+    "urls": [["https://travle.earth/"]]
 }

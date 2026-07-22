@@ -1,6 +1,6 @@
 {
     "name": "Bartosz Ciechanowski: Sound",
-    "url": "https://ciechanow.ski/sound",
-    "declarativeKnowledge": ["how sound works"]
+    "urls": [["https://ciechanow.ski/sound", "read here"]],
+    "rels": {}
 
 }

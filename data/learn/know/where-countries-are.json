@@ -1,0 +1,6 @@
+{
+    "name": ["where countries are"],
+    "rels": {
+        "source:trainer:travle": ["practice where countries are in relation to each other"]
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "name": ["to speak Spanish"],
+    "rels": {
+        "learn:able:to-understand-spanish": ["overlaps"]
+    }
+}

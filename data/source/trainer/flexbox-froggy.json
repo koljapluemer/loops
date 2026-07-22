@@ -1,8 +1,6 @@
 {
     "name": "Flexbox Froggy",
-    "url": "https://flexboxfroggy.com/",
+    "urls": ["https://flexboxfroggy.com/"],
     "topics": ["web development", "programming", "web design"],
-    "coreActivities": [
-        "write flexbox CSS to move the froggies to where they want to go"
-    ]
+    "img": "R0lGODlhIAAgAPIAAAAAAB9WZ0SiSkSsRtzc2uSCSgAAAAAAACH5BAEAAAAALAAAAAAgACAAAAN5CLrc/jDKSau9OOuthP9gKARkaZ6BQAiDR6zi+I4kYRYFGe/j0JY4YJAXQxlLrg+seDQSRU0nrwWKop4h60lQeHm/X5pW1wWbV2NkGfaqecVj7tkM18rn4bQOD65b73xoeoBzOH5RWImKi4yNjo8gHJKTlJWWl5gMCQA7"
 }

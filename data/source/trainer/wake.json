@@ -1,8 +1,4 @@
 {
     "name": "Wake",
-    "url": "https://fielddaylab.org/play/wake/ci/production/",
-    "declarativeKnowledge": ["how scientific field experiments work"],
-    "links": {
-        "Detailed Description": "https://fielddaylab.org/play/wake/"
-    }
+    "urls": [["https://fielddaylab.org/play/wake/ci/production/", "Play"], ["https://fielddaylab.org/play/wake/", "Detailed Description"]]
 }

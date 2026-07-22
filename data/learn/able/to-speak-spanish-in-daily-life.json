@@ -1,0 +1,7 @@
+{
+    "name": ["to speak Spanish in everyday situations"],
+    "rels": {
+        "source:trainer:language-life": ["practice"],
+        "learn:able:spanish": ["parent topic"]
+    }
+}

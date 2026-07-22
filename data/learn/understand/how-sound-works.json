@@ -1,0 +1,7 @@
+{
+    "name": ["how sound works"],
+    "topics": ["sound", "music", "acoustics", "waves", "physics"],
+    "rels": {
+        "source:trainer:ciechanowski-sound": ["get a good introduction"]
+    }
+}
