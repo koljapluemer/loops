@@ -4,9 +4,9 @@ import {
   getAllEntries,
   getEntry,
   getBacklinks,
+  getContexts,
   idToHref,
   imgSrc,
-  relLabel,
   textList,
 } from "../../lib/data";
 
@@ -25,13 +25,7 @@ const entry = getEntry(id)!;
 const backlinks = getBacklinks(id);
 const description = textList(entry.raw.description).join(" / ");
 const topics = textList(entry.raw.topics);
-const rels = Object.entries(entry.raw.rels ?? {}).map(
-  ([targetId, labelList]) => ({
-    targetId,
-    label: relLabel(labelList),
-    target: getEntry(targetId),
-  }),
-);
+const contexts = getContexts(entry);
 ---
 
 <Base title={entry.name}>
@@ -77,21 +71,26 @@ const rels = Object.entries(entry.raw.rels ?? {}).map(
   }
 
   {
-    rels.length > 0 && (
+    contexts.length > 0 && (
       <section>
         <h2>Relations</h2>
-        <ul>
-          {rels.map((r) => (
-            <li>
-              {r.target ? (
-                <a href={idToHref(r.targetId)}>{r.target.name}</a>
-              ) : (
-                <span class="muted">{r.targetId}</span>
-              )}
-              {r.label && <> — {r.label}</>}
-            </li>
-          ))}
-        </ul>
+        {contexts.map((c) => (
+          <div class="context">
+            <h3>{c.name}</h3>
+            <ul>
+              {c.rels.map((r) => (
+                <li>
+                  {r.target ? (
+                    <a href={idToHref(r.targetId)}>{r.target.name}</a>
+                  ) : (
+                    <span class="muted">{r.targetId}</span>
+                  )}
+                  {r.label && <> — {r.label}</>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </section>
     )
   }

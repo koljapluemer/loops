@@ -1,6 +1,10 @@
 {
     "name": [["One Word a Day"]],
-    "rels": {
-        "source:misc:lisaanmasry-word-of-the-day": [["to get a daily random Egyptian Arabic vocabulary word"]]
+    "contexts": {
+        "misc": {
+            "rels": {
+                "source:misc:lisaanmasry-word-of-the-day": [["to get a daily random Egyptian Arabic vocabulary word"]]
+            }
+        }
     }
 }

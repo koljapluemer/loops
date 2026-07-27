@@ -1,7 +1,11 @@
 {
     "name": [["basic CSS Flexbox commands"]],
     "topics": [["css"], ["flexbox"], ["web design"]],
-    "rels": {
-        "source:trainer:flexbox-froggy": [["internalize basic commands and their usage"]]
+    "contexts": {
+        "misc": {
+            "rels": {
+                "source:trainer:flexbox-froggy": [["internalize basic commands and their usage"]]
+            }
+        }
     }
 }

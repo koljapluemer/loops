@@ -1,6 +1,10 @@
 {
     "name": [["to sing"]],
-    "rels": {
-        "source:trainer:toner": [["practice singing"]]
+    "contexts": {
+        "misc": {
+            "rels": {
+                "source:trainer:toner": [["practice singing"]]
+            }
+        }
     }
 }

@@ -10,12 +10,16 @@ type RatableTextEntry = [string, ...unknown[]];
 type RatableTextList = RatableTextEntry[];
 type UrlEntry = [string, string, ...unknown[]];
 
+interface RawContext {
+  rels: Record<string, RatableTextList>;
+}
+
 interface RawEntry {
   name: RatableTextList;
   description?: RatableTextList;
   topics?: RatableTextList;
   urls?: UrlEntry[];
-  rels?: Record<string, RatableTextList>;
+  contexts?: Record<string, RawContext>;
   img?: string;
 }
 
@@ -82,13 +86,13 @@ function loadBacklinks(): Map<string, Backlink[]> {
   if (!backlinksCache) {
     const map = new Map<string, Backlink[]>();
     for (const entry of loadEntries()) {
-      for (const [targetId, labelList] of Object.entries(
-        entry.raw.rels ?? {},
-      )) {
-        const label = firstOf(labelList).join(", ");
-        const list = map.get(targetId) ?? [];
-        list.push({ from: entry, label });
-        map.set(targetId, list);
+      for (const context of Object.values(entry.raw.contexts ?? {})) {
+        for (const [targetId, labelList] of Object.entries(context.rels)) {
+          const label = firstOf(labelList).join(", ");
+          const list = map.get(targetId) ?? [];
+          list.push({ from: entry, label });
+          map.set(targetId, list);
+        }
       }
     }
     backlinksCache = map;
@@ -118,6 +122,28 @@ export function getEntry(id: string): Entry | undefined {
 
 export function getBacklinks(id: string): Backlink[] {
   return loadBacklinks().get(id) ?? [];
+}
+
+export interface Rel {
+  targetId: string;
+  label: string;
+  target: Entry | undefined;
+}
+
+export interface EntryContext {
+  name: string;
+  rels: Rel[];
+}
+
+export function getContexts(entry: Entry): EntryContext[] {
+  return Object.entries(entry.raw.contexts ?? {}).map(([name, context]) => ({
+    name,
+    rels: Object.entries(context.rels).map(([targetId, labelList]) => ({
+      targetId,
+      label: relLabel(labelList),
+      target: getEntry(targetId),
+    })),
+  }));
 }
 
 export function idToHref(id: string): string {

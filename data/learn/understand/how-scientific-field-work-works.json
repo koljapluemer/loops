@@ -3,7 +3,11 @@
         ["how scientific field experiments work"],
         ["how scientific field work works"]
     ],
-    "rels": {
-        "source:trainer:wake": [["get a feel for the life as a field scientist"]]
+    "contexts": {
+        "misc": {
+            "rels": {
+                "source:trainer:wake": [["get a feel for the life as a field scientist"]]
+            }
+        }
     }
 }

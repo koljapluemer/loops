@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://the-platform.local/schema/data-entry.schema.json",
     "title": "Data entry",
-    "description": "Common schema for every JSON file under data/. Text-bearing fields (name, description, topics, rels labels, urls) are wrapped in a double array: the outer array lists alternative candidates, the inner array is a tuple whose first slot is the value itself. This leaves the second slot free for a Bayesian rating object to be appended later without re-nesting anything.",
+    "description": "Common schema for every JSON file under data/. Text-bearing fields (name, description, topics, rel labels, urls) are wrapped in a double array: the outer array lists alternative candidates, the inner array is a tuple whose first slot is the value itself. This leaves the second slot free for a Bayesian rating object to be appended later without re-nesting anything. Rels are grouped under named contexts (e.g. \"misc\") to disambiguate the nature of a relation.",
     "type": "object",
     "properties": {
         "name": { "$ref": "#/$defs/ratableTextList" },
@@ -12,11 +12,11 @@
             "type": "array",
             "items": { "$ref": "#/$defs/ratableUrlEntry" }
         },
-        "rels": {
+        "contexts": {
             "type": "object",
             "minProperties": 1,
             "patternProperties": {
-                "^[a-z0-9]+(-[a-z0-9]+)*(:[a-z0-9]+(-[a-z0-9]+)*){1,2}$": { "$ref": "#/$defs/ratableTextList" }
+                "^[a-z0-9]+(-[a-z0-9]+)*$": { "$ref": "#/$defs/context" }
             },
             "additionalProperties": false
         },
@@ -29,6 +29,24 @@
     "required": ["name"],
     "additionalProperties": false,
     "$defs": {
+        "context": {
+            "description": "A named grouping of rels (e.g. \"misc\").",
+            "type": "object",
+            "properties": {
+                "rels": { "$ref": "#/$defs/relsMap" }
+            },
+            "required": ["rels"],
+            "additionalProperties": false
+        },
+        "relsMap": {
+            "description": "Maps a target entry id to its rel label(s) within one context.",
+            "type": "object",
+            "minProperties": 1,
+            "patternProperties": {
+                "^[a-z0-9]+(-[a-z0-9]+)*(:[a-z0-9]+(-[a-z0-9]+)*){1,2}$": { "$ref": "#/$defs/ratableTextList" }
+            },
+            "additionalProperties": false
+        },
         "ratableTextEntry": {
             "description": "[value] today; [value, ratingObj] once Bayesian ratings are wired in.",
             "type": "array",

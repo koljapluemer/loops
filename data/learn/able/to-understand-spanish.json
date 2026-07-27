@@ -1,6 +1,10 @@
 {
     "name": [["to understand Spanish"]],
-    "rels": {
-        "learn:able:to-speak-spanish": [["overlaps"]]
+    "contexts": {
+        "misc": {
+            "rels": {
+                "learn:able:to-speak-spanish": [["overlaps"]]
+            }
+        }
     }
 }
