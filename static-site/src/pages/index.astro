@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import ProposeObjectForm from "../components/ProposeObjectForm.astro";
 import { getTopLevels, getEntriesByTop } from "../lib/data";
 
 const tops = getTopLevels();
@@ -18,4 +19,6 @@ const counts = new Map(tops.map((top) => [top, getEntriesByTop(top).length]));
       ))
     }
   </ul>
+
+  <ProposeObjectForm tops={tops} />
 </Base>

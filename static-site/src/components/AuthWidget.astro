@@ -1,0 +1,113 @@
+---
+---
+
+<div id="auth-widget" class="auth-widget">
+  <span id="auth-status" class="muted">checking session…</span>
+
+  <form id="auth-signed-out" class="auth-form" hidden>
+    <input type="email" id="auth-email" placeholder="email" autocomplete="email" required />
+    <input
+      type="password"
+      id="auth-password"
+      placeholder="password"
+      autocomplete="current-password"
+      minlength="6"
+      required
+    />
+    <button type="submit" id="auth-sign-in">sign in</button>
+    <button type="button" id="auth-sign-up">sign up</button>
+  </form>
+
+  <div id="auth-signed-in" class="auth-form" hidden>
+    <span id="auth-who"></span>
+    <button type="button" id="auth-sign-out">sign out</button>
+    <button type="button" id="auth-delete">delete account</button>
+  </div>
+
+  <p id="auth-error" class="error" hidden></p>
+</div>
+
+<script>
+  import { onAuth, signIn, signUp, signOutUser, deleteAccount } from "../lib/firebase";
+
+  const status = document.getElementById("auth-status")!;
+  const signedOutForm = document.getElementById("auth-signed-out") as HTMLFormElement;
+  const signedInBox = document.getElementById("auth-signed-in")!;
+  const who = document.getElementById("auth-who")!;
+  const errorEl = document.getElementById("auth-error")!;
+  const emailInput = document.getElementById("auth-email") as HTMLInputElement;
+  const passwordInput = document.getElementById("auth-password") as HTMLInputElement;
+
+  function showError(err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    errorEl.textContent = message.replace(/^Firebase:\s*/, "");
+    errorEl.hidden = false;
+  }
+
+  function clearError() {
+    errorEl.hidden = true;
+    errorEl.textContent = "";
+  }
+
+  onAuth((user) => {
+    status.hidden = true;
+    if (user) {
+      signedOutForm.hidden = true;
+      signedInBox.hidden = false;
+      who.textContent = user.email ?? "";
+    } else {
+      signedOutForm.hidden = false;
+      signedInBox.hidden = true;
+    }
+  });
+
+  signedOutForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearError();
+    try {
+      await signIn(emailInput.value, passwordInput.value);
+      signedOutForm.reset();
+    } catch (err) {
+      showError(err);
+    }
+  });
+
+  document.getElementById("auth-sign-up")!.addEventListener("click", async () => {
+    clearError();
+    try {
+      await signUp(emailInput.value, passwordInput.value);
+      signedOutForm.reset();
+    } catch (err) {
+      showError(err);
+    }
+  });
+
+  document.getElementById("auth-sign-out")!.addEventListener("click", async () => {
+    clearError();
+    try {
+      await signOutUser();
+    } catch (err) {
+      showError(err);
+    }
+  });
+
+  document.getElementById("auth-delete")!.addEventListener("click", async () => {
+    clearError();
+    if (!confirm("Delete your account? This cannot be undone.")) return;
+    try {
+      await deleteAccount();
+    } catch (err: any) {
+      if (err?.code === "auth/requires-recent-login") {
+        const password = prompt("Please re-enter your password to confirm account deletion:");
+        if (!password) return;
+        try {
+          await deleteAccount(password);
+        } catch (err2) {
+          showError(err2);
+        }
+      } else {
+        showError(err);
+      }
+    }
+  });
+</script>

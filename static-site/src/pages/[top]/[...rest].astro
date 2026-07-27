@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import ProposeRelationshipForm from "../../components/ProposeRelationshipForm.astro";
 import {
   getAllEntries,
   getEntry,
@@ -26,6 +27,7 @@ const backlinks = getBacklinks(id);
 const description = textList(entry.raw.description).join(" / ");
 const topics = textList(entry.raw.topics);
 const contexts = getContexts(entry);
+const allEntries = getAllEntries().map((e) => ({ id: e.id, name: e.name }));
 ---
 
 <Base title={entry.name}>
@@ -110,4 +112,6 @@ const contexts = getContexts(entry);
       </section>
     )
   }
+
+  <ProposeRelationshipForm sourceId={entry.id} sourceName={entry.name} entries={allEntries} />
 </Base>
