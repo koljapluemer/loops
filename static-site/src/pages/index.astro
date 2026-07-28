@@ -1,24 +1,58 @@
 ---
 import Base from "../layouts/Base.astro";
-import ProposeObjectForm from "../components/ProposeObjectForm.astro";
-import { getTopLevels, getEntriesByTop } from "../lib/data";
+import { getEntriesByTop, shuffled } from "../lib/data";
 
-const tops = getTopLevels();
-const counts = new Map(tops.map((top) => [top, getEntriesByTop(top).length]));
+const learnEntries = shuffled(getEntriesByTop("learn"));
 ---
 
 <Base title="The Platform">
-  <h1>The Platform</h1>
-  <ul>
+  <h1 class="text-2xl font-bold mb-1">the platform</h1>
+  <p class="text-sm text-base-content/70 mb-4">
+    A page collecting how to learn stuff — what to learn, how to learn it, and
+    where to find the sources and methods that work.
+  </p>
+
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+      learn ({learnEntries.length})
+    </h2>
+    <a
+      id="propose-node-link"
+      href="/learn/propose/"
+      class="btn btn-xs btn-primary"
+      hidden
+    >
+      + propose a learning node
+    </a>
+  </div>
+
+  <ul class="flex flex-wrap gap-2">
     {
-      tops.map((top) => (
+      learnEntries.map((entry) => (
         <li>
-          <a href={`/${top}/`}>{top}</a>{" "}
-          <span class="muted">({counts.get(top)})</span>
+          <a
+            href={`/${entry.segments.join("/")}/`}
+            class="flex items-center gap-1.5 rounded border border-base-300 bg-base-100 hover:bg-base-200 px-2 py-1 text-sm"
+          >
+            {entry.sub && <span class="badge badge-sm badge-neutral">{entry.sub}</span>}
+            {entry.name}
+          </a>
         </li>
       ))
     }
   </ul>
 
-  <ProposeObjectForm tops={tops} />
+  <ul id="my-learn-proposals" class="flex flex-wrap gap-2 mt-2 empty:mt-0"></ul>
 </Base>
+
+<script>
+  import { onAuth } from "../lib/firebase";
+  import { mountMyObjectProposals } from "../lib/myProposals";
+
+  const link = document.getElementById("propose-node-link")!;
+  onAuth((user) => {
+    link.hidden = !user;
+  });
+
+  mountMyObjectProposals(document.getElementById("my-learn-proposals")!, "learn");
+</script>

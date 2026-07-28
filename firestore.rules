@@ -4,10 +4,10 @@ rules_version = '2';
 // `firebase deploy --only firestore:rules`. See FIREBASE_SETUP.md.
 //
 // Model: signed-in users may create their own "proposals" (pending review),
-// and may read back only the proposals they submitted. Nobody can update or
-// delete a proposal from the client — the local-cms tool moves proposals to
-// accepted/rejected/deferred using the Firebase Admin SDK, which is not
-// subject to these rules.
+// may read back only the proposals they submitted, and may edit or withdraw
+// those proposals for as long as they're still pending — once local-cms
+// (using the Admin SDK, which bypasses these rules) accepts/rejects/defers
+// one, the owner can no longer touch it from the client.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /proposals/{proposalId} {
@@ -20,7 +20,17 @@ service cloud.firestore {
         && request.resource.data.status == 'pending'
         && request.resource.data.type in ['object', 'relationship'];
 
-      allow update, delete: if false;
+      allow update: if request.auth != null
+        && resource.data.submittedByUid == request.auth.uid
+        && resource.data.status == 'pending'
+        && request.resource.data.submittedByUid == resource.data.submittedByUid
+        && request.resource.data.submittedByEmail == resource.data.submittedByEmail
+        && request.resource.data.status == 'pending'
+        && request.resource.data.type == resource.data.type;
+
+      allow delete: if request.auth != null
+        && resource.data.submittedByUid == request.auth.uid
+        && resource.data.status == 'pending';
     }
 
     match /{document=**} {

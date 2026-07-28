@@ -1,0 +1,149 @@
+---
+interface Props {
+  id: string;
+  sourceId: string;
+  sourceName: string;
+  context?: string; // fixed context; omit to make it a free-text/dropdown field
+  entries: { id: string; name: string }[];
+  tops: string[];
+  secondaryTypesByTop: Record<string, string[]>;
+  contextNames: string[];
+  triggerLabel: string;
+  triggerClass?: string;
+}
+const {
+  id,
+  sourceId,
+  sourceName,
+  context,
+  entries,
+  tops,
+  secondaryTypesByTop,
+  contextNames,
+  triggerLabel,
+  triggerClass = "btn btn-xs btn-outline",
+} = Astro.props;
+
+const targets = entries.filter((e) => e.id !== sourceId);
+const contextListId = `${id}-context-list`;
+---
+
+<button type="button" class={triggerClass} data-open-dialog={id}>
+  {triggerLabel}
+</button>
+
+<dialog id={id} class="modal relation-modal">
+  <div class="modal-box max-w-md">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="text-lg font-bold">propose a relationship</h3>
+    <p class="text-sm text-base-content/60 mb-3">for <span class="font-medium">{sourceName}</span></p>
+
+    <form
+      data-relation-form
+      data-source-id={sourceId}
+      data-source-name={sourceName}
+      data-context={context ?? ""}
+      data-secondary-types={JSON.stringify(secondaryTypesByTop)}
+      class="flex flex-col gap-2"
+    >
+      {
+        context ? (
+          <p class="text-sm">
+            context: <span class="font-medium">{context}</span>
+          </p>
+        ) : (
+          <label class="form-control">
+            <span class="label-text text-sm mb-1">context</span>
+            <input
+              class="rel-context-input input input-bordered input-sm w-full"
+              type="text"
+              list={contextListId}
+              required
+              minlength="1"
+              placeholder="e.g. misc"
+            />
+            <datalist id={contextListId}>
+              {contextNames.map((c) => <option value={c} />)}
+            </datalist>
+          </label>
+        )
+      }
+
+      <label class="form-control">
+        <span class="label-text text-sm mb-1">relationship description</span>
+        <input
+          class="rel-label-input input input-bordered input-sm w-full"
+          type="text"
+          required
+          minlength="1"
+          placeholder="e.g. practice singing"
+        />
+      </label>
+
+      <div role="tablist" class="tabs tabs-boxed tabs-sm mt-1">
+        <a role="tab" class="rel-tab tab tab-active" data-tab="existing">existing node</a>
+        <a role="tab" class="rel-tab tab" data-tab="new">new node</a>
+      </div>
+
+      <div class="rel-panel flex flex-col gap-2" data-panel="existing">
+        <label class="form-control">
+          <span class="label-text text-sm mb-1">related object</span>
+          <select class="rel-target-select select select-bordered select-sm" required>
+            <option value="" disabled selected>choose an object…</option>
+            {targets.map((e) => (
+              <option value={e.id} data-name={e.name}>
+                {e.name} ({e.id})
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div class="rel-panel flex flex-col gap-2" data-panel="new" hidden>
+        <div class="flex gap-2">
+          <label class="form-control flex-1">
+            <span class="label-text text-sm mb-1">primary type</span>
+            <select class="rel-primary-select select select-bordered select-sm">
+              {tops.map((t) => <option value={t}>{t}</option>)}
+            </select>
+          </label>
+          <label class="form-control flex-1">
+            <span class="label-text text-sm mb-1">secondary type</span>
+            <select class="rel-secondary-select select select-bordered select-sm" />
+          </label>
+        </div>
+        <label class="form-control">
+          <span class="label-text text-sm mb-1">name</span>
+          <input class="rel-name-input input input-bordered input-sm w-full" type="text" />
+        </label>
+        <label class="form-control">
+          <span class="label-text text-sm mb-1">description (optional)</span>
+          <textarea class="rel-description-input textarea textarea-bordered textarea-sm w-full" rows="2" />
+        </label>
+        <label class="form-control">
+          <span class="label-text text-sm mb-1">topics (optional, comma-separated)</span>
+          <input class="rel-topics-input input input-bordered input-sm w-full" type="text" />
+        </label>
+        <div class="flex gap-2">
+          <label class="form-control flex-1">
+            <span class="label-text text-sm mb-1">url (optional)</span>
+            <input class="rel-url-input input input-bordered input-sm w-full" type="url" placeholder="https://…" />
+          </label>
+          <label class="form-control flex-1">
+            <span class="label-text text-sm mb-1">url label</span>
+            <input class="rel-url-label-input input input-bordered input-sm w-full" type="text" />
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-sm self-start mt-1">submit proposal</button>
+      <p class="rel-success text-success text-sm" hidden>Thanks! Your proposal is pending review.</p>
+      <p class="rel-error text-error text-sm" hidden></p>
+    </form>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

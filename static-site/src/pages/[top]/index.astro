@@ -24,17 +24,26 @@ const groupKeys = [...grouped.keys()].sort((a, b) => {
 ---
 
 <Base title={top}>
-  <p><a href="/">&larr; all categories</a></p>
-  <h1>{top}</h1>
-  {entries.length === 0 && <p class="muted">No entries yet.</p>}
+  <p class="mb-2"><a href="/" class="link link-hover text-sm">&larr; all categories</a></p>
+  <h1 class="text-2xl font-bold mb-4">{top}</h1>
+  {entries.length === 0 && <p class="text-base-content/60 text-sm">No entries yet.</p>}
   {
     groupKeys.map((key) => (
-      <section>
-        {key && <h2>{key}</h2>}
-        <ul>
+      <section class="mb-4">
+        {key && (
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mb-1">
+            {key}
+          </h2>
+        )}
+        <ul class="flex flex-wrap gap-2">
           {(grouped.get(key) ?? []).map((entry) => (
             <li>
-              <a href={`/${entry.segments.join("/")}/`}>{entry.name}</a>
+              <a
+                href={`/${entry.segments.join("/")}/`}
+                class="block rounded border border-base-300 bg-base-100 hover:bg-base-200 px-2 py-1 text-sm"
+              >
+                {entry.name}
+              </a>
             </li>
           ))}
         </ul>

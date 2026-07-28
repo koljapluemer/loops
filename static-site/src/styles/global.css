@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: corporate --default, business --prefersdark;
+}
+
+@layer base {
+  /* Dense, low-whitespace baseline: this site should read as
+     "crammed with useful information", not spaced-out marketing. */
+  body {
+    font-size: 0.9rem;
+  }
+  h1 {
+    text-transform: capitalize;
+  }
+}

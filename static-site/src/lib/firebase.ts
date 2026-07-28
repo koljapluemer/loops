@@ -14,7 +14,15 @@ import {
   initializeFirestore,
   collection,
   addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  onSnapshot,
   serverTimestamp,
+  type DocumentData,
+  type QueryDocumentSnapshot,
 } from "firebase/firestore";
 
 // These identifiers are safe to ship in client code: Firebase access is
@@ -84,13 +92,27 @@ export interface ObjectProposalInput {
   urlLabel?: string;
 }
 
+export interface NewNodeTarget {
+  top: string;
+  sub?: string;
+  name: string;
+  description?: string;
+  topics?: string[];
+  url?: string;
+  urlLabel?: string;
+}
+
 export interface RelationshipProposalInput {
   sourceId: string;
   sourceName: string;
-  targetId: string;
-  targetName: string;
   context: string;
   label: string;
+  // Exactly one of these is set: an existing node picked from the dropdown,
+  // or a brand-new node proposed inline (accepted together as one unit in
+  // local-cms).
+  targetId?: string;
+  targetName?: string;
+  newTarget?: NewNodeTarget;
 }
 
 function requireUser(): User {
@@ -125,4 +147,64 @@ export async function submitRelationshipProposal(
     submittedByEmail: user.email,
     ...input,
   });
+}
+
+export interface Proposal {
+  id: string;
+  type: "object" | "relationship";
+  status: string;
+  [key: string]: unknown;
+}
+
+function toProposal(d: QueryDocumentSnapshot<DocumentData>): Proposal {
+  return { id: d.id, ...d.data() } as Proposal;
+}
+
+// Live list of the current user's own pending proposals (object + relationship).
+// Rules only allow reading docs where submittedByUid == auth.uid, so this is
+// scoped to "my" proposals by construction. Re-subscribes to Firestore across
+// sign-in/out; the returned function tears the whole thing down.
+export function subscribeMyProposals(cb: (proposals: Proposal[]) => void): () => void {
+  let unsubSnapshot: (() => void) | null = null;
+  const unsubAuth = onAuth((user) => {
+    unsubSnapshot?.();
+    unsubSnapshot = null;
+    if (!user) {
+      cb([]);
+      return;
+    }
+    const q = query(
+      collection(db, "proposals"),
+      where("submittedByUid", "==", user.uid),
+      where("status", "==", "pending"),
+    );
+    unsubSnapshot = onSnapshot(q, (snap) => {
+      cb(snap.docs.map(toProposal));
+    });
+  });
+  return () => {
+    unsubSnapshot?.();
+    unsubAuth();
+  };
+}
+
+export async function deleteProposal(id: string): Promise<void> {
+  requireUser();
+  await deleteDoc(doc(db, "proposals", id));
+}
+
+export async function updateObjectProposal(
+  id: string,
+  input: Partial<ObjectProposalInput>,
+): Promise<void> {
+  requireUser();
+  await updateDoc(doc(db, "proposals", id), { ...input });
+}
+
+export async function updateRelationshipProposal(
+  id: string,
+  input: Partial<RelationshipProposalInput>,
+): Promise<void> {
+  requireUser();
+  await updateDoc(doc(db, "proposals", id), { ...input });
 }

@@ -14,10 +14,11 @@ Firebase console → **Authentication** → **Sign-in method** → enable
 
 The rules are checked into the repo at `firestore.rules`. They let a
 signed-in user create proposal documents (only their own, only with
-`status: "pending"`) and read back their own proposals, but never update or
-delete anything from the client — proposals only move to
-accepted/rejected/deferred via `local-cms`, which uses an admin key that
-bypasses these rules entirely.
+`status: "pending"`), read back their own proposals, and edit or withdraw
+those proposals for as long as they're still pending. Once a proposal is
+accepted/rejected/deferred via `local-cms` (which uses an admin key that
+bypasses these rules entirely), the owner can no longer touch it from the
+client.
 
 Either:
 

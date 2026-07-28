@@ -116,6 +116,34 @@ export function getEntriesByTop(top: string): Entry[] {
   return loadEntries().filter((e) => e.top === top);
 }
 
+// Secondary types are folders, not free text (see data-entry.schema.json /
+// CLAUDE.md): data/<top>/<secondary>/*.json. Tops with no subfolders (flat
+// data/<top>/*.json) simply have no secondary types.
+export function getSecondaryTypes(top: string): string[] {
+  const dir = path.join(DATA_DIR, top);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .sort();
+}
+
+let contextNamesCache: string[] | null = null;
+
+export function getAllContextNames(): string[] {
+  if (!contextNamesCache) {
+    const names = new Set<string>();
+    for (const entry of loadEntries()) {
+      for (const name of Object.keys(entry.raw.contexts ?? {})) {
+        names.add(name);
+      }
+    }
+    contextNamesCache = [...names].sort();
+  }
+  return contextNamesCache;
+}
+
 export function getEntry(id: string): Entry | undefined {
   return loadEntries().find((e) => e.id === id);
 }
@@ -144,6 +172,15 @@ export function getContexts(entry: Entry): EntryContext[] {
       target: getEntry(targetId),
     })),
   }));
+}
+
+export function shuffled<T>(items: T[]): T[] {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
 }
 
 export function idToHref(id: string): string {
