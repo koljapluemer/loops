@@ -1,0 +1,9 @@
+[project]
+name = "cms"
+version = "0.1.0"
+description = "Static site generator for the-platform"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "jinja2>=3.1.6",
+]

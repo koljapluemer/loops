@@ -1,0 +1,11 @@
+body {
+  font-family: sans-serif;
+  max-width: 60rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.diagram svg {
+  max-width: 100%;
+  height: auto;
+}
