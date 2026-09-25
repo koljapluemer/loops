@@ -2,14 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>the platform</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1>Loops</h1>
-  <ul>
+  <ul class="loop-grid">
     {% for item in loops %}
-    <li><a href="loops/{{ item.slug }}/">{{ item.title }}</a></li>
+    <li>
+      <a class="loop-card" href="loops/{{ item.slug }}/">
+        <div class="loop-card__thumb">
+          <img src="{{ item.thumb }}" alt="" loading="lazy">
+        </div>
+        <span class="loop-card__title">{{ item.title }}</span>
+      </a>
+    </li>
     {% endfor %}
   </ul>
 </body>
