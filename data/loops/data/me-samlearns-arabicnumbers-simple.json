@@ -1,0 +1,6 @@
+{
+    "displayName": "Simple Exercise-Based Practice for Target Language Numbers With Unfamiliar Script",
+    "links": "Used [here](https://www.samlearns.org/arabicnumbers)",
+    "disadvantages": "- progress through the numbers (e.g. 0-100) is very slow\n- no model of per-number learning progress\n- no modelling of inter-number dependencies, such as as knowing the word for three helping with the word for the number thirty or thirty-three (language-dependent)"
+
+}
