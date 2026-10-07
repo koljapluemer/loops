@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="{{ url_for('new') }}" method="post" enctype="multipart/form-data"
+      class="card bg-base-100 shadow-sm mb-6">
+  <div class="card-body flex-row flex-wrap items-end gap-3">
+    <label class="w-full sm:w-auto">
+      <div class="label text-xs mb-1">image</div>
+      <input type="file" name="file" accept=".jpg,.jpeg,.png,.webp" required class="file-input file-input-sm">
+    </label>
+    <label class="grow">
+      <div class="label text-xs mb-1">displayName</div>
+      <input type="text" name="displayName" id="displayName" required class="input input-sm w-full">
+    </label>
+    <label class="grow">
+      <div class="label text-xs mb-1">slug</div>
+      <input type="text" name="slug" id="slug" required pattern="[a-z0-9-]+" class="input input-sm w-full font-mono">
+    </label>
+    <button class="btn btn-sm btn-primary">add</button>
+  </div>
+</form>
+
+<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {% for item in loops %}
+  <li>
+    <a href="{{ url_for('edit', slug=item.slug) }}" class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow h-full">
+      <figure class="checker aspect-[4/3]">
+        <img src="{{ url_for('image', slug=item.slug, v=item.v) }}" alt="" loading="lazy" class="max-h-full max-w-full object-contain">
+      </figure>
+      <div class="card-body p-3 gap-1">
+        <div class="text-sm font-medium">{{ item.meta.displayName or "—" }}</div>
+        <div class="text-xs font-mono opacity-60 break-all">{{ item.slug }}</div>
+      </div>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+{% block scripts %}
+<script>
+  const name = document.getElementById("displayName");
+  const slug = document.getElementById("slug");
+  let slugTouched = false;
+  slug.addEventListener("input", () => { slugTouched = slug.value !== ""; });
+  name.addEventListener("input", () => {
+    if (slugTouched) return;
+    slug.value = name.value.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  });
+</script>
+{% endblock %}

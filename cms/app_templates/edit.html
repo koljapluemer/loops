@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ loop.slug }} · loops cms{% endblock %}
+{% block content %}
+<div class="grid lg:grid-cols-[1fr_20rem] gap-4 items-start">
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body p-3 gap-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="join">
+          <button type="button" class="btn btn-sm join-item" data-mode="crop">crop <kbd class="kbd kbd-xs">c</kbd></button>
+          <button type="button" class="btn btn-sm join-item" data-mode="brush">erase <kbd class="kbd kbd-xs">b</kbd></button>
+        </div>
+        <label class="flex items-center gap-2 text-xs">
+          <input type="range" id="brushSize" min="2" max="200" value="30" class="range range-xs w-32">
+          <span id="brushSizeLabel" class="font-mono w-8">30</span>
+        </label>
+        <button type="button" id="undo" class="btn btn-sm">undo <kbd class="kbd kbd-xs">ctrl+z</kbd></button>
+        <div class="grow"></div>
+        <span id="status" class="text-xs opacity-60"></span>
+        <button type="button" id="reset" class="btn btn-sm btn-ghost">reset</button>
+        <button type="button" id="save" class="btn btn-sm btn-primary">save image</button>
+      </div>
+      <div id="stage" class="checker relative mx-auto w-fit touch-none select-none max-w-full">
+        <canvas id="canvas" class="block max-w-full max-h-[80vh] w-auto h-auto"></canvas>
+        <div id="cropBox" class="absolute pointer-events-none outline outline-2 outline-primary"
+             style="box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.45)"></div>
+        <div id="brushCursor" class="absolute pointer-events-none rounded-full border border-error hidden"
+             style="transform: translate(-50%, -50%)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <form action="{{ url_for('update_meta', slug=loop.slug) }}" method="post" class="card bg-base-100 shadow-sm">
+      <div class="card-body p-4 gap-3">
+        <div class="text-xs font-mono opacity-60 break-all">{{ loop.slug }}</div>
+        <label>
+          <div class="label text-xs mb-1">displayName</div>
+          <textarea name="displayName" rows="3" class="textarea textarea-sm w-full">{{ loop.meta.displayName }}</textarea>
+        </label>
+        <button class="btn btn-sm btn-primary">save</button>
+      </div>
+    </form>
+    <button type="button" class="btn btn-sm btn-error btn-outline" onclick="deleteModal.showModal()">delete</button>
+  </div>
+</div>
+
+<dialog id="deleteModal" class="modal">
+  <div class="modal-box">
+    <p>Delete <span class="font-mono">{{ loop.slug }}</span>? Removes the json, the webp and the original in img_in.</p>
+    <div class="modal-action">
+      <form method="dialog"><button class="btn btn-sm">cancel</button></form>
+      <form action="{{ url_for('delete', slug=loop.slug) }}" method="post">
+        <button class="btn btn-sm btn-error">delete</button>
+      </form>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.EDITOR = {
+    src: {{ url_for('image', slug=loop.slug) | tojson }},
+    saveUrl: {{ url_for('update_image', slug=loop.slug) | tojson }},
+  };
+</script>
+<script src="{{ url_for('static', filename='editor.js') }}"></script>
+{% endblock %}

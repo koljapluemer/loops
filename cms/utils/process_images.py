@@ -25,8 +25,9 @@ BORDER_PX = 15
 UPSCALE = 4
 
 
-def process(src: Path, dst: Path) -> None:
-    img = Image.open(src).convert("L")
+def binarize(img: Image.Image) -> Image.Image:
+    """Returns black ink on transparent RGBA, trimmed and padded."""
+    img = img.convert("L")
     w, h = img.size
 
     # Threshold at higher resolution so the downsampled mask gets smooth, antialiased edges
@@ -37,16 +38,23 @@ def process(src: Path, dst: Path) -> None:
 
     alpha = Image.fromarray(ink).resize((w, h), Image.Resampling.LANCZOS)
 
-    # Crop surrounding whitespace, then set unified padding
-    bbox = alpha.getbbox()
-    if bbox:
-        alpha = alpha.crop(bbox)
-    alpha = ImageOps.expand(alpha, border=BORDER_PX, fill=0)
-
     # Pure black ink, transparent background
     out = Image.new("RGBA", alpha.size, (0, 0, 0, 0))
     out.putalpha(alpha)
-    out.save(dst, "WEBP", lossless=True)
+    return trim_and_pad(out)
+
+
+def trim_and_pad(img: Image.Image) -> Image.Image:
+    """Crops surrounding transparency, then sets unified padding."""
+    img = img.convert("RGBA")
+    bbox = img.getchannel("A").getbbox()
+    if bbox:
+        img = img.crop(bbox)
+    return ImageOps.expand(img, border=BORDER_PX, fill=(0, 0, 0, 0))
+
+
+def process(src: Path, dst: Path) -> None:
+    binarize(Image.open(src)).save(dst, "WEBP", lossless=True)
 
 
 def main() -> None:
